@@ -19,12 +19,31 @@ router.post("/message", (req, res) => {
   }else if( !destination.includes("@")){
     res.status(500).json({message:"el destino debe ser un correo"})
   }else{
-    messagesRefact.publish_message(destination, body,res);
+
+    messagesRefact.publish_message(destination, body,res)
+    .then(() => {
+      messagesRefact.publish_message_BD(destination,body,true);
+      res.status(200).send("Registro guardado en base de datos y mensaje enviado")
+    })
+    .catch(() => {
+      if(res.status(408)){
+        messagesRefact.publish_message_BD(destination,body,true,false);
+        res.status(408).send("Mensaje enviado pero no confirmado en el registro")
+        
+      }else{
+        messagesRefact.publish_message_BD(destination,body);
+        res.status(500).send("Registro guardado en base de datos,pero el mensaje no fue enviado")
+      }
+    });    
   }
   
 
   //checkErrors.checkError();
 });
+
+router.get("/message",(req,res)=>{
+  messagesRefact.view_message(res)
+})
 
 
 module.exports = router;

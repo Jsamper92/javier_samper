@@ -3,7 +3,9 @@ const Schema   = mongoose.Schema;
 
 const userSchema = new Schema({
   destination: String,
-  body: String
+  body: String,
+  status: {type:Boolean},
+  confirmationMessage:{type:Boolean}
 }, {
   timestamps: {
     createdAt: 'created_at',

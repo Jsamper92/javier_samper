@@ -7,8 +7,9 @@ const messages = require('./messages')
 const mongoose     = require('mongoose');
 
 
-mongoose
-  .connect('mongodb://localhost:27017/message_app', {
+ setTimeout(() => {
+  mongoose
+  .connect('mongodb://mongodb/message_app', {
     useNewUrlParser: true
   })
   .then(x => {
@@ -17,6 +18,7 @@ mongoose
   .catch(err => {
     console.error('Error connecting to mongo', err)
   });
+}, 25000);
 
 app.use(bodyParser.json());
 

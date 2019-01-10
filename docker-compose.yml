@@ -6,6 +6,7 @@ services:
       - "9001:9001"
     depends_on:
       - "mongodb"
+    #command: ["./wait-for-it.sh", "mongodb:27017", "node", "index.js"]
   messageapp:
     image: "cabify/backend-bootcamp-messageapp:latest"
     ports:
