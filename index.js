@@ -1,24 +1,18 @@
 require('dotenv').config();
 
-const bodyParser   = require('body-parser');
+
 const express      = require('express');
+
+
+const bodyParser   = require('body-parser');
 const app = express();
-const messages = require('./messages')
-const mongoose     = require('mongoose');
+//const messages = require('./src/routes/sendMessages')
+const database = require('./src/database')
+const getMessages = require('./src/Clients/getMessages')
+const validation = require('./src/validations/validation');
+const connectMongo = new database();
 
-
- setTimeout(() => {
-  mongoose
-  .connect('mongodb://mongodb/message_app', {
-    useNewUrlParser: true
-  })
-  .then(x => {
-    console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
-  })
-  .catch(err => {
-    console.error('Error connecting to mongo', err)
-  });
-}, 25000);
+connectMongo.connectBD()
 
 app.use(bodyParser.json());
 
@@ -26,8 +20,14 @@ app.use(bodyParser.json());
 app.get('/',(req,res)=>{
   res.send("hola mundo")
 })
+app.get("/messages", getMessages);
 
-app.use('/', messages)
+app.post('/messages',(req,res)=>{
+  validation(req,res)
+});
+
+//app.use('/messages', require('./src/routes/sendMessages'))
+//app.use('/',getMessages)
 
 app.listen(9001,()=>{console.log("escuchando en puerto 9001")})
 module.exports = app;
