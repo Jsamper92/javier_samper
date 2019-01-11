@@ -6,9 +6,9 @@ const express      = require('express');
 
 const bodyParser   = require('body-parser');
 const app = express();
-//const messages = require('./src/routes/sendMessages')
+const sendMessages = require('./src/routes/sendMessages')
 const database = require('./src/database')
-const getMessages = require('./src/Clients/getMessages')
+const getMessages = require('./src/Controllers/getMessages')
 const validation = require('./src/validations/validation');
 const connectMongo = new database();
 
@@ -26,8 +26,7 @@ app.post('/messages',(req,res)=>{
   validation(req,res)
 });
 
-//app.use('/messages', require('./src/routes/sendMessages'))
-//app.use('/',getMessages)
+
 
 app.listen(9001,()=>{console.log("escuchando en puerto 9001")})
 module.exports = app;
