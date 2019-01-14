@@ -1,5 +1,15 @@
-const Message = require('../Models/userMessage')
+const express = require('express');
+const getMessagesRoute = express.Router();
+const Message = require("../Models/userMessage");
 
-module.exports = function(conditions = {}){
-    return Message.find(conditions)
-}
+getMessagesRoute.get('/messages',  (req, res, next) =>{
+  Message.find({}, (error, messagesDatabase) => {
+		if (error) {
+			next(error);
+		} else {
+			res.status(200).json(messagesDatabase);
+		}
+	});
+});
+
+module.exports = getMessagesRoute;
