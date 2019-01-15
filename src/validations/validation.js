@@ -1,6 +1,6 @@
 const messageApp = require('../messageApp/messageApp');
 const saveMessage = require('../Clients/saveMessage');
-const pay = require('../Clients/pay');
+const updateMoney = require('../Clients/updateMoney');
 const lock = require('locks');
 var mutex = lock.createMutex();
 
@@ -20,8 +20,9 @@ let validation = function(req,res){
         .then(() => {
             saveMessage(destination,body,true);
             res.status(200).send("Registro guardado en base de datos y mensaje enviado")
+            
             mutex.lock(function(){
-              pay()
+              updateMoney()
             })
             mutex.unlock();
 

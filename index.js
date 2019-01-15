@@ -13,6 +13,7 @@ const postMessage = require("./src/Routes/postMessage");
 const index = require("./src/Routes/index");
 
 connectMongo.connectBD();
+connectMongo.connectBD_secondary();
 
 app.use(bodyParser.json());
 app.use("/", postCredit);

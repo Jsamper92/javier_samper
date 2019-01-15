@@ -12,9 +12,17 @@ services:
     ports:
       - "3000:3000"
   mongodb:
-    image: mongo
+    image: mongo:latest
+    container_name: mongo1
     volumes:
       - ./data/db:/data/db
     ports:
       - 27017:27017
+  mongodb1:
+    image: mongo:latest
+    container_name: mongo2
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 28018:28018
 

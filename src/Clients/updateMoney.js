@@ -1,7 +1,7 @@
 
 const UserCredit = require("../Models/credit");
 
-let pay = function(res) {
+let updateMoney = function(res) {
   
   return UserCredit.find({})
   .then(credit => {
@@ -23,4 +23,4 @@ let pay = function(res) {
 }
 
 
-module.exports = pay;
+module.exports = updateMoney;
