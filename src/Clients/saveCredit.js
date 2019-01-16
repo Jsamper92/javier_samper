@@ -3,13 +3,13 @@ const Credit = require("../Models/credit");
 let saveCredit = function(amount, res) {
   return Credit.find({})
     .then(credit => {
-      console.log(credit);
       if (credit.length === 0) {
         let userCredit = new Credit({ amount });
-
+        
         userCredit
           .save()
-          .then(() => {
+          .then(x => {
+            console.log(x)
             res.status(200).json({ message: "crdit added" });
           })
           .catch(() => {

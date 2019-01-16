@@ -12,8 +12,8 @@ const postCredit = require("./src/Routes/postCredit");
 const postMessage = require("./src/Routes/postMessage");
 const index = require("./src/Routes/index");
 
-connectMongo.connectBD();
-connectMongo.connectBD_secondary();
+//connectMongo.connectBD();
+//connectMongo.connectBD_secondary();
 
 app.use(bodyParser.json());
 app.use("/", postCredit);

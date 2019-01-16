@@ -22,7 +22,7 @@ services:
     image: mongo:latest
     container_name: mongo2
     volumes:
-      - ./data/db:/data/db
+      - ./data/db:/data/db2
     ports:
-      - 28018:28018
+      - 27018:27017
 

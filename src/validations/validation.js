@@ -5,7 +5,7 @@ const lock = require('locks');
 var mutex = lock.createMutex();
 
 let validation = function(req,res){
-    const {destination,body} = req.body;
+    
 
     if((destination.length<=1) && body.length <=1){
         res.status(500).json({message:"los campos no pueden estar vacios o tener un solo caracter"})
