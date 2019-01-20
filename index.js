@@ -7,6 +7,7 @@ const {
   ValidationError
 } = require("express-json-validator-middleware");
 
+const queueMessage = require('./src/jobsQueue')
 const sendMessage = require("./src/controllers/sendMessage");
 const getMessages = require("./src/controllers/getMessages");
 const updateCredit = require("./src/controllers/updateCredit");
@@ -54,7 +55,7 @@ app.post(
   "/messages",
   bodyParser.json(),
   validate({ body: messageSchema }),
-  sendMessage
+  queueMessage
 );
 
 app.post(
