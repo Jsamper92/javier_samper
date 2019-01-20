@@ -1,25 +1,33 @@
-const Message = require("../Models/userMessage");
+const Message = require("../models/message");
+const updateCreditTransaction = require("../transactions/updateCredit");
+const saveMessageTransaction = require("../transactions/saveMessage");
 
-const connectionBD = require('../database');
-const connectionMongo = new connectionBD();
+module.exports = function(messageParams, cb) {
+  const MessageModel = Message();
+  let message = new MessageModel(messageParams);
 
-const url1 = `mongodb://localhost:27017/mongoBD`
-const mongoUno = connectionMongo.connect(url1);
-
-const url2 = `mongodb://localhost:27018/mongoBD`
-const mongoDos = connectionMongo.connect(url2);
-
-let saveMessage = function(destination, body, status) {
-  var userMessage = new Message({ destination, body ,status});
-
-  userMessage
-    .save()
-    .then(() => {
-      console.log("Message saved succesfully:");
-    })
-    .catch(() => {
-      console.log("Error while saving");
-    });
+  if (message.status == "OK") {
+    updateCreditTransaction(
+      {
+        amount: { $gte: 1 },
+        location: message.location.name
+      },
+      {
+        $inc: { amount: -message.location.cost }
+      },
+      function(doc, error) {
+        if (error) {
+          return cb(undefined, error);
+        } else if (doc == undefined) {
+          let error = "Not enough credit";
+          console.log(error);
+          cb(undefined, error);
+        } else {
+          saveMessageTransaction(messageParams, cb);
+        }
+      }
+    );
+  } else {
+    cb();
+  }
 };
-
-module.exports = saveMessage;

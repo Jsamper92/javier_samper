@@ -1,28 +1,30 @@
-version: '3'
+version: "3"
 services:
-  myapp:
+  exercise5:
     build: .
     ports:
-      - "9001:9001"
-    depends_on:
-      - "mongodb"
-    #command: ["./wait-for-it.sh", "mongodb:27017", "node", "index.js"]
+      - "9005:9005"
+    links:
+      - mongodb
+      - replica
   messageapp:
-    image: "cabify/backend-bootcamp-messageapp:latest"
+    image: cabify/backend-bootcamp-messageapp
     ports:
       - "3000:3000"
   mongodb:
-    image: mongo:latest
-    container_name: mongo1
+    image: mongo
     volumes:
       - ./data/db:/data/db
     ports:
       - 27017:27017
-  mongodb1:
-    image: mongo:latest
-    container_name: mongo2
+  replica:
+    image: mongo
+    command: mongod
     volumes:
-      - ./data/db:/data/db2
+      - ./data/replica:/data/replica
     ports:
       - 27018:27017
-
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
