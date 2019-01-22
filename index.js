@@ -1,19 +1,14 @@
-const http = require("http");
 const express = require("express");
-
+const getMessageStatus = require("./src/controllers/getMessageStatus");
 const bodyParser = require("body-parser");
 const {
   Validator,
   ValidationError
 } = require("express-json-validator-middleware");
-
-const queueMessage = require('./src/jobsQueue')
-const sendMessage = require("./src/controllers/sendMessage");
+const queuemessage = require("./src/controllers/jobsQueue");
 const getMessages = require("./src/controllers/getMessages");
 const updateCredit = require("./src/controllers/updateCredit");
-
 const app = express();
-
 const validator = new Validator({ allErrors: true });
 const { validate } = validator;
 
@@ -55,7 +50,7 @@ app.post(
   "/messages",
   bodyParser.json(),
   validate({ body: messageSchema }),
-  queueMessage
+  queuemessage
 );
 
 app.post(
@@ -66,6 +61,8 @@ app.post(
 );
 
 app.get("/messages", getMessages);
+
+app.get("/messages/:messageid/status", getMessageStatus);
 
 app.use(function(err, req, res, next) {
   console.log(res.body);

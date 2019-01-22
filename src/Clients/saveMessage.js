@@ -6,6 +6,7 @@ module.exports = function(messageParams, cb) {
   const MessageModel = Message();
   let message = new MessageModel(messageParams);
 
+
   if (message.status == "OK") {
     updateCreditTransaction(
       {
@@ -28,6 +29,6 @@ module.exports = function(messageParams, cb) {
       }
     );
   } else {
-    cb();
+    saveMessageTransaction(messageParams, cb);
   }
 };
