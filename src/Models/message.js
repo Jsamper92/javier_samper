@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const database = require("../database");
 
 let messageSchema = new mongoose.Schema({
-  id: String,
+  _id: String,
   destination: String,
   body: String,
   location: {
@@ -17,7 +17,7 @@ let messageSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["PROCESSING","ERROR", "OK", "TIMEOUT"]
+    enum: ["ERROR", "OK", "TIMEOUT", "QUEUED"]
   }
 });
 

@@ -1,14 +1,8 @@
-const http = require("http");
-const saveMessage = require("../clients/saveMessage");
 const getCredit = require("../clients/getCredit");
+const sendMessage = require("../jobs/sendMessage");
 
-const random = n => Math.floor(Math.random() * Math.floor(n));
-
-module.exports = function(message) {
-  const body = JSON.stringify(message);
-
-  const messageBody = message;
-  var query = getCredit();
+module.exports = function(req, res) {
+  const query = getCredit();
 
   query.exec(function(err, credit) {
     if (err) return console.log(err);
@@ -16,75 +10,18 @@ module.exports = function(message) {
     current_credit = credit[0].amount;
 
     if (current_credit > 0) {
-      const postOptions = {
-        // host: "exercise5_messageapp_1",
-        // host: "messageapp",
-        host: "localhost",
-        port: 3000,
-        path: "/message",
-        method: "post",
-        json: true,
-        headers: {
-          "Content-Type": "application/json",
-          "Content-Length": Buffer.byteLength(body)
-        }
-      };
+      sendMessage(req.body)
+        .then(messageId => {
+          const response = {
+            messageId
+          };
 
-      let postReq = http.request(postOptions);
-
-      postReq.on("response", postRes => {
-        if (postRes.statusCode === 200) {
-          saveMessage(
-            {
-              ...messageBody,
-              status: "OK"
-            },
-            function(_result, error) {
-              if (error) {
-                 console.log(error);
-              } else {
-                console.log(body);
-              }
-            }
-          );
-        } else {
-          console.error("Error while sending message");
-
-          saveMessage(
-            {
-              ...messageBody,
-              status: "ERROR"
-            },
-            () => {
-              console.log("Internal server error: SERVICE ERROR");
-            }
-          );
-        }
-      });
-
-      postReq.setTimeout(random(6000));
-
-      postReq.on("timeout", () => {
-        console.error("Timeout Exceeded!");
-        postReq.abort();
-
-        saveMessage(
-          {
-            ...messageBody,
-            status: "TIMEOUT"
-          },
-          () => {
-            console.log("Internal server error: TIMEOUT");
-          }
-        );
-      });
-
-      postReq.on("error", () => {});
-
-      postReq.write(body);
-      postReq.end();
+          res.statusCode = 200;
+          res.end(JSON.stringify(response));
+        });
     } else {
-      console.log("No credit error");
+      res.statusCode = 500;
+      res.end("No credit error");
     }
   });
 };
